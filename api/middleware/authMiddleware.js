@@ -1,7 +1,7 @@
 // api/middleware/authMiddleware.js
 const jwt = require("jsonwebtoken");
 const User = require("../models/User"); // Update path
-const { jwtSecret } = require("../config");
+const { jwtSecret } = require("../config/jwt");
 
 const authenticateToken = async (req, res, next) => {
   try {

@@ -1,15 +1,19 @@
+
+
+
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigator = useNavigate();
+  const navigate = useNavigate();
+  const { login } = useAuth();
 
-  async function handlelogin(ev) {
+  async function handleLogin(ev) {
     ev.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/login", {
@@ -18,13 +22,11 @@ function Login() {
       });
 
       if (response.data.status === "success") {
-        // Store the token in localStorage for future authenticated requests
-        localStorage.setItem("token", response.data.token);
-
+        await login(response.data.token, response.data.user);
         toast.success("Login successful", {
           position: "top-center",
         });
-        navigator("/");
+        navigate("/");
       }
     } catch (error) {
       const errorMessage = error.response?.data?.message || "Login failed";
@@ -38,7 +40,7 @@ function Login() {
     <div className="mt-4 grow flex items-center justify-around">
       <div className="mt-[120px] w-[390px]">
         <h1 className="text-4xl text-center mb-4">Login</h1>
-        <form className="max-w-md mx-auto" onSubmit={handlelogin}>
+        <form className="max-w-md mx-auto" onSubmit={handleLogin}>
           <div>
             <input
               type="email"

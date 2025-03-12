@@ -40,17 +40,6 @@ function NewProperty() {
       formData.append("images", image);
     });
 
-    //   try {
-    //     await axios.post("http://localhost:5000/NewProperty", formData, {
-    //       headers: { "Content-Type": "multipart/form-data" },
-    //     });
-    //     toast.success("Property added successfully!");
-    //     navigate("/Main01");
-    //   } catch (error) {
-    //     toast.error("Failed to add property.");
-    //     console.error("Error adding property:", error);
-    //   }
-    // };
     try {
       await axios.post("http://localhost:5000/NewProperty", formData, {
         headers: { "Content-Type": "multipart/form-data" },
@@ -145,13 +134,6 @@ function NewProperty() {
           className="w-full p-3 border rounded-md"
           required
         />
-        {/* Other Fields */}
-        {/* <input
-          type="file"
-          onChange={(e) => setImage(e.target.files[0])}
-          accept="image/*"
-          required
-        /> */}
         <div className="space-y-2">
           <label className="block text-sm font-medium text-gray-700">
             Property Images (Max 5)

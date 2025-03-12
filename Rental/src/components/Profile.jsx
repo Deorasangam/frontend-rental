@@ -1,42 +1,41 @@
-// Create new file: components/Profile.jsx
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useAuth } from "../context/AuthContext";
 
 const Profile = () => {
-  const [user, setUser] = useState(null);
   const [properties, setProperties] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user, logout } = useAuth();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
+    if (!user) {
       navigate("/login");
       return;
     }
 
     const fetchProfile = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/profile", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setUser(response.data.user);
+        const response = await axios.get("http://localhost:5000/profile");
         setProperties(response.data.properties);
       } catch (error) {
         console.error("Error fetching profile:", error);
-        localStorage.removeItem("token");
-        navigate("/login");
+        if (error.response?.status === 401) {
+          logout();
+          navigate("/login");
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchProfile();
-  }, [navigate]);
+  }, [user, navigate, logout]);
+
+  if (!user) {
+    return null; // Will redirect in useEffect
+  }
 
   if (loading) {
     return (
